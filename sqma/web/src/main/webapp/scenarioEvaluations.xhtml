@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	template="/templates/default.xhtml">
+
+	<ui:define name="content">
+		<h:form>
+		<h2>Quality Scenario Evaluations</h2>
+			<p:dataTable id="dtQualityEvaluations" value="#{qualityScenariosBacking.escenarioCalidadSeleccionado.evaluacionesEscenarioCalidad}"
+				var="evaluacionEscenarioCalidad" rowIndexVar="rowVar"
+				rowStyleClass="#{evaluacionEscenarioCalidad.indicadorViolacion ? 'service_level_violation' : null}">
+				<p:column headerText="#">
+					<h:outputText value="#{rowVar+1}" />
+				</p:column>
+				<p:column headerText="Start time">
+					<h:outputText value="#{evaluacionEscenarioCalidad.fechaInicioProceso.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy h:mm:ss a"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="End time">
+					<h:outputText value="#{evaluacionEscenarioCalidad.fechaFinProceso.time}">
+						<f:convertDateTime pattern="dd/MM/yyyy h:mm:ss a"/>
+					</h:outputText>
+				</p:column>
+				<p:column headerText="QME calculation span">
+					<h:outputText value="#{evaluacionEscenarioCalidad.duracionEvaluacion}" />
+				</p:column>
+				<p:column headerText="Calculated QME">
+					<h:outputText value="#{evaluacionEscenarioCalidad.qmeCalculado}" />
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="40" width="10"/>
+			<p:commandLink value="go back" actionListener="#{qualityScenariosBacking.loadQualityScenarios}"
+			action="qualityScenarios.jsf?faces-redirect=true" />
+			<p:growl id="gGrowl" life="2500"/>
+			<p:poll listener="#{qualityScenariosBacking.updateScenarioEvaluations}"
+			process="@this" update="dtQualityEvaluations gGrowl" interval="6"/>
+		</h:form>
+	</ui:define>
+</ui:composition>
